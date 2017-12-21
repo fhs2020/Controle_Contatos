@@ -1,0 +1,45 @@
+﻿@model CadastroContatos.Models.Conversa
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Detalhes</h2>
+
+<div>
+    <h4>Conversa</h4>
+    <hr />
+    <dl class="dl-horizontal">
+ 
+        <dt>
+           Autor
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UsuarioNome)
+        </dd>
+        <dt>
+            Cliente
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ClienteNome)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Descrição)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Descrição)
+        </dd>
+        <dt>
+            Data
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DataHoraConversa)
+        </dd>
+ 
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Editar</a> |
+    @Html.ActionLink("Voltar para lista de conversas", "Index", new { clienteId = Model.ClienteId })
+</div>
+ 

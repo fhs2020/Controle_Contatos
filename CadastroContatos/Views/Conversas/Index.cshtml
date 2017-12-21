@@ -1,0 +1,55 @@
+﻿@model IEnumerable<CadastroContatos.Models.Conversa>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Anotações sobre contato com cliente</h2>
+
+<p>
+    <a asp-controller="Conversas" asp-action="Create" asp-route-id="@ViewBag.ClienteId">Adicionar novas anotações</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UsuarioNome)
+            </th>
+            <th>
+                Cliente
+            </th>
+            <th>
+                Conversa Detalhes
+            </th>
+            <th>
+                Data 
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UsuarioNome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClienteNome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descrição)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataHoraConversa)
+            </td>
+   
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Excluir</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

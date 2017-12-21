@@ -1,0 +1,188 @@
+﻿@model CadastroContatos.Models.Cliente
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Editar</h2>
+
+<h4>Cliente</h4>
+<hr />
+<form asp-action="Edit">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="container">
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label asp-for="Nome" class="control-label"></label>
+                <input asp-for="Nome" class="form-control" />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="Sobrenome" class="control-label"></label>
+                <input asp-for="Sobrenome" class="form-control" />
+                <span asp-validation-for="Sobrenome" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label asp-for="Cell" class="control-label"></label>
+                <input asp-for="Cell" class="form-control" />
+                <span asp-validation-for="Cell" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="Telefone" class="control-label"></label>
+                <input asp-for="Telefone" class="form-control" />
+                <span asp-validation-for="Telefone" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="Cidade" class="control-label"></label>
+                <input asp-for="Cidade" class="form-control" />
+                <span asp-validation-for="Cidade" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+
+                <label class="control-label">Interesse</label>
+                <select asp-for="ProdutoId" asp-items="@ViewBag.Interesse" class="form-control">
+                    <option>Selecione produto</option>
+                </select>
+                <span asp-validation-for="ProdutoId" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label class="control-label">Status</label>
+                <select asp-for="StatusId" asp-items="@ViewBag.Status" class="form-control">
+                    <option>Selecione um status</option>
+                </select>
+                <span asp-validation-for="StatusId" class="text-danger"></span>
+            </div>
+            <div class="form-group" style="float: right; margin-right: 20px;">
+                <input type="submit" value="Salvar / Adicionar anotações" class="btn btn-md btn-primary" />
+            </div>
+        </div>
+        <div>
+            <a asp-action="Index">Voltar para a lista de clientes</a>
+        </div>
+        <br />
+    </div>
+</form>
+
+<br />
+<hr />
+<form>
+    @if (ViewBag.ListaConversas.Count > 0)
+    {
+
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Autor
+                </th>
+                <th>
+                    Cliente
+                </th>
+                <th>
+                    Detalhes
+                </th>
+                <th>
+                    Data
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.ListaConversas)
+            {
+                <tr>
+                    <td>
+                        @item.UsuarioNome
+                    </td>
+                    <td>
+                        @item.ClienteNome
+                    </td>
+                    <td>
+                        @item.Descrição
+                    </td>
+                    <td>
+                        @item.DataHoraConversa
+                    </td>
+
+                    <td>
+                        <a asp-controller="Conversas" asp-action="Details" asp-route-id="@item.Id">Detalhes</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    }
+</form>
+
+
+<br />
+@*<form>
+    <div class="container" style="margin-top:3%">
+        <a href="#" class="btn btn-info" onclick="AddNewOrcamento(0)">Adicionar Conversa</a> <br /><br />
+
+        <table class="table table-striped" id="myTable">
+            <thead>
+                <tr>
+                    <th>Conversa</th>
+                    <th>Autor</th>
+                </tr>
+            </thead>
+            <tbody id="SetItemList">
+                <tr id="LoadingStatus" style="color:red"></tr>
+            </tbody>
+        </table>
+
+        <div class="modal fade" id="MyModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <a href="#" class="close" data-dismiss="modal">&times;</a>
+                        <h4 id="ModalTitle"></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>*@
+
+
+@section Scripts {
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery/inputmask.js"></script>
+    <script src="~/lib/jquery.inputmask.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#Telefone").inputmask("mask", { "mask": "(99) 9999-9999" });
+            $("#Cell").inputmask("mask", { "mask": "(99) 9-9999-9999" });
+            //$("#Documento").inputmask("mask", { "mask": "99.999.999/9999-99" }, { reverse: true });
+            //$("#CPF").inputmask("mask", { "mask": "999.999.999-99" });
+            //$("#preco").inputmask("mask", { "mask": "999.999,99" }, { reverse: true });
+            //$("#valor").inputmask("mask", { "mask": "#.##9,99" }, { reverse: true });
+            //$("#ip").inputmask("mask", { "mask": "999.999.999.999" });
+        });
+
+    </script>
+}
