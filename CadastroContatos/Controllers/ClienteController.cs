@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CadastroContatos.Data;
 using CadastroContatos.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CadastroContatos.Controllers
 {
+    [Authorize]
     public class ClienteController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -20,10 +22,84 @@ namespace CadastroContatos.Controllers
         }
 
         // GET: Cliente
-        public async Task<IActionResult> Index()
+        public IActionResult Index(string search)
         {
-            return View(await _context.Clientes.ToListAsync());
+            ViewBag.CurrentPage = 1;
+
+            ViewBag.LastPage = Math.Ceiling(Convert.ToDouble(_context.Clientes.ToList().Count()) / 5);
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                var searchWord = search.ToLower();
+
+                var listaClientes = _context.Clientes.ToList();
+
+                var clienteSearched = listaClientes.Where(s => s.Nome.ToLower().Contains(searchWord) ||
+                                       s.Email.ToLower().Contains(searchWord) ||
+                                       s.Telefone.ToLower().Contains(searchWord)).ToList();
+
+                if (clienteSearched != null)
+                {
+                    return View(clienteSearched);
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            else
+            {
+                return View(_context.Clientes.Take(5));
+            }
         }
+
+        [HttpPost]
+        public IActionResult Index(int CurrentPage, int LastPage, string search)
+        {
+            ViewBag.CurrentPage = CurrentPage;
+
+            ViewBag.LastPage = LastPage;
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                var searchWord = search.ToLower();
+
+                var listaClientes = _context.Clientes.ToList();
+
+                var clienteSearched = listaClientes.Where(s => s.Nome.ToLower().Contains(searchWord) || s.Sobrenome.ToLower().Contains(searchWord)).ToList();
+
+                if (clienteSearched != null)
+                {
+                    return View(clienteSearched);
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            else
+            {
+                var quantidadePaginas = 0;
+
+                if (CurrentPage >= 1)
+                {
+                    quantidadePaginas = (CurrentPage - 1);
+
+                    ViewBag.CurrentPage = CurrentPage;
+                }
+                else
+                {
+                    quantidadePaginas = 1;
+
+                    ViewBag.CurrentPage = 2;
+                }
+
+                var clientes = _context.Clientes.OrderBy(x => x.Id).Skip(quantidadePaginas * 5).Take(5);
+
+                return View(clientes);
+            }
+        }
+
 
         // GET: Cliente/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -66,6 +142,14 @@ namespace CadastroContatos.Controllers
         {
             if (ModelState.IsValid)
             {
+                var status = _context.Status.Find(cliente.StatusId);
+
+                cliente.Status = status.Descrição;
+
+                var interesse = _context.Produto.Find(cliente.ProdutoId);
+
+                cliente.ProdutoNome = interesse.Descricao;
+
                 var usuarioNome = User.Identity.Name;
 
                 cliente.UserName = usuarioNome;
@@ -77,8 +161,15 @@ namespace CadastroContatos.Controllers
                 return RedirectToAction("Create", "Conversas", new { clienteId = cliente.Id });
             }
 
+            var statusLista = _context.Status.ToList();
 
-            return RedirectToAction("Create", "Conversas", new { clienteId = cliente.Id });
+            ViewBag.Status = new SelectList(statusLista, "Id", "Descrição");
+
+            var interesseLista = _context.Produto.ToList();
+
+            ViewBag.Interesse = new SelectList(interesseLista, "Id", "Descricao");
+
+            return View();
         }
 
         // GET: Cliente/Edit/5

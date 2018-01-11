@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CadastroContatos.Data;
 using CadastroContatos.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CadastroContatos.Controllers
 {
+    [Authorize]
     public class ProdutoController : Controller
     {
         private readonly ApplicationDbContext _context;

@@ -9,57 +9,174 @@
 <p>
     <a asp-action="Create">Adicionar novo</a>
 </p>
+
+
+@using (Html.BeginForm())
+{
+
+    <div class="row" style="margin-left: 650px;">
+        <div class="col-lg-6">
+            @Html.Editor("Search", new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+        <input style="margin-left: 50px;" type="submit" value="Pesquisar" class="btn btn-primary btn-md" />
+        <br />
+    </div>
+
+}
+<br />
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Nome)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Sobrenome)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Cell)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Telefone)
-                </th>
-                <th>
-                    E-mail
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Cidade)
-                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sobrenome)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Cell)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Telefone)
+            </th>
+            <th>
+                E-mail
+            </th>
+            <th>
+                Interesse
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cidade)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Sobrenome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cell)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Telefone)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cidade)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Detailhes</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Excluir</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Sobrenome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cell)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Telefone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProdutoNome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cidade)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Editar / Ler anotações sobre este cliente</a>
+                    @*<a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |*@
+                    @*<a asp-action="Delete" asp-route-id="@item.Id">Excluir</a>*@
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+<div>
+    @using (Html.BeginForm())
+    {
+        <input type="hidden" id="CurrentPage" name="CurrentPage" value="@ViewBag.CurrentPage" />
+        <input type="hidden" id="LastPage" name="LastPage" value="@ViewBag.LastPage" />
+    }
+
+    <input type="button" id="Anterior" value="Anterior" class="btn btn-primary" />
+    <input type="button" id="Proximo" value="Proximo" class="btn btn-primary" />
+
+</div>
+
+@section Scripts {
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#Anterior").click(function () {
+            if (CalculateAndSetPage("Anterior"))
+                $("form").submit();
+        });
+
+        $("#Proximo").click(function () {
+            if (CalculateAndSetPage("Proximo"))
+                $("form").submit();
+
+        });
+
+    });
+
+    function CalculateAndSetPage(movingType) {
+        var currentPage = parseInt($("#CurrentPage").val());
+
+        var lastPage = parseInt($("#LastPage").val());
+        debugger;
+
+        if (currentPage == 1 && movingType == "Anterior") {
+
+            return false;
+        }
+
+        if (currentPage == lastPage && movingType == "Proximo") {
+
+            return false;
+
+        }
+
+
+        if (movingType == "Anterior") {
+            currentPage--;
+
+        }
+        else if (movingType == "Proximo") {
+            currentPage++;
+        }
+        else {
+            alert("Deu algum problema, por favor entrar em contato com equipe de informatica");
+
+        }
+
+        $("#CurrentPage").val(currentPage);
+
+        return true;
+
+        //$.ajax({
+        //    type: "Post",
+        //    url: "/Cliente/Index",
+        //    data: { CurrentPage: currentPage },
+        //    success: function () {
+
+        //        // $("#MyModal").modal("hide");
+        //        //url.location('/Order/Index');
+
+        //    }
+
+        //});
+    }
+
+ 
+        $('#Search').focus(function () {
+            $(this).animate({ width: '+=50' }, 'slow');
+        }).blur(function () {
+            $(this).animate({ width: '-=50' }, 'slow');
+        });
+ 
+
+    </script>
+}

@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using CadastroContatos.Data;
 using CadastroContatos.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CadastroContatos.Controllers
 {
+    [Authorize]
     public class ConversasController : Controller
     {
         private readonly ApplicationDbContext _context;
